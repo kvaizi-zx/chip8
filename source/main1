@@ -1,0 +1,61 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int main() {
+    FILE* f1, * f2, * h;
+    char ch;
+
+    f1 = fopen("f1.txt", "r");
+    if (f1 == NULL) {
+        printf("Ошибка открытия файла f1.txt\n");
+        return 1;
+    }
+    f2 = fopen("f2.txt", "r");
+    if (f2 == NULL) {
+        printf("Ошибка открытия файла f2.txt\n");
+        fclose(f1);
+        return 1;
+    }
+    h = fopen("h.txt", "w");
+    if (h == NULL) {
+        printf("Ошибка создания файла h.txt\n");
+        fclose(f1);
+        fclose(f2);
+        return 1;
+    }
+    while ((ch = fgetc(f1)) != EOF) {
+        fputc(ch, h);
+    }
+    fclose(f1);
+    f1 = fopen("f1.txt", "w");
+    if (f1 == NULL) {
+        printf("Ошибка открытия f1.txt для записи\n");
+        fclose(f2);
+        fclose(h);
+        return 1;
+    }
+    rewind(f2);
+    while ((ch = fgetc(f2)) != EOF) {
+        fputc(ch, f1);
+    }
+    fclose(f2);
+    f2 = fopen("f2.txt", "w");
+    if (f2 == NULL) {
+        printf("Ошибка открытия f2.txt для записи\n");
+        fclose(f1);
+        fclose(h);
+        return 1;
+    }
+    rewind(h);
+    while ((ch = fgetc(h)) != EOF) {
+        fputc(ch, f2);
+    }
+    fclose(f1);
+    fclose(f2);
+    fclose(h);
+
+    printf("Обмен содержимым между f1.txt и f2.txt успешно выполнен!\n");
+    printf("Использован вспомогательный файл h.txt\n");
+
+    return 0;
+}
