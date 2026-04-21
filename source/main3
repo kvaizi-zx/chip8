@@ -1,0 +1,31 @@
+#include <stdio.h>
+
+int main() {
+    FILE* f, * g, * h;
+    char ch;
+
+    f = fopen("f.txt", "r");
+    g = fopen("g.txt", "r");
+    h = fopen("h.txt", "w");
+
+    if (!f || !g || !h) {
+        printf("Ошибка открытия файлов\n");
+        return 1;
+    }
+
+    while ((ch = fgetc(f)) != EOF) {
+        fputc(ch, h);
+    }
+
+    while ((ch = fgetc(g)) != EOF) {
+        fputc(ch, h);
+    }
+
+    fclose(f);
+    fclose(g);
+    fclose(h);
+
+    printf("Файл h.txt создан: сначала f.txt, затем g.txt\n");
+
+    return 0;
+}
