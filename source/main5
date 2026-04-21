@@ -1,0 +1,33 @@
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+
+int main() {
+    FILE* f, * g;
+    char word[1000];
+    int first = 1;
+
+    f = fopen("f.txt", "r");
+    g = fopen("g.txt", "w");
+
+    if (!f || !g) {
+        printf("Ошибка открытия файлов\n");
+        return 1;
+    }
+
+    while (fscanf(f, "%s", word) != EOF) {
+        if (strlen(word) > 1) {
+            if (!first) {
+                fprintf(g, " ");
+            }
+            fprintf(g, "%s", word);
+            first = 0;
+        }
+    }
+
+    fclose(f);
+    fclose(g);
+
+    printf("Готово\n");
+    return 0;
+}
