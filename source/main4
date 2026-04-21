@@ -1,0 +1,48 @@
+#include <stdio.h>
+#include <math.h>
+
+int main() {
+    FILE* f, * g;
+    int num;
+
+    f = fopen("f.txt", "r");
+    g = fopen("g.txt", "w");
+
+    if (!f || !g) {
+        printf("Ошибка открытия файлов\n");
+        return 1;
+    }
+
+    fprintf(g, "а) Четные числа:\n");
+    rewind(f);
+    while (fscanf(f, "%d", &num) != EOF) {
+        if (num % 2 == 0) {
+            fprintf(g, "%d ", num);
+        }
+    }
+    fprintf(g, "\n\n");
+
+    fprintf(g, "б) Числа, делящиеся на 3 и не делящиеся на 7:\n");
+    rewind(f);
+    while (fscanf(f, "%d", &num) != EOF) {
+        if (num % 3 == 0 && num % 7 != 0) {
+            fprintf(g, "%d ", num);
+        }
+    }
+    fprintf(g, "\n\n");
+
+    fprintf(g, "в) Точные квадраты:\n");
+    rewind(f);
+    while (fscanf(f, "%d", &num) != EOF) {
+        int root = (int)sqrt(num);
+        if (root * root == num && num >= 0) {
+            fprintf(g, "%d ", num);
+        }
+    }
+    fprintf(g, "\n");
+    fclose(f);
+    fclose(g);
+
+    printf("Файл g.txt создан с результатами\n");
+    return 0;
+}
