@@ -1,0 +1,68 @@
+#include <stdio.h>
+#include <string.h>
+
+typedef struct {
+    char brand[50];
+    char number[20];
+    char owner[50];
+} Car;
+
+int main() {
+    FILE *f, *g;
+    Car cars[100];
+    int count = 0;
+    char search_brand[50];
+    int brand_count[100];
+    char brands[100][50];
+    int unique_brands = 0;
+
+    f = fopen("f.txt", "r");
+    g = fopen("g.txt", "w");
+
+    if (!f || !g) {
+        printf("Ошибка открытия файлов\n");
+        return 1;
+    }
+
+    while (fscanf(f, "%s %s %s", cars[count].brand, cars[count].number, cars[count].owner) != EOF) {
+        count++;
+    }
+    fclose(f);
+
+    printf("Введите марку автомобиля: ");
+    scanf("%s", search_brand);
+
+    fprintf(g, "а) Владельцы и номера автомобилей марки %s:\n", search_brand);
+    for (int i = 0; i < count; i++) {
+        if (strcmp(cars[i].brand, search_brand) == 0) {
+            fprintf(g, "%s %s\n", cars[i].owner, cars[i].number);
+        }
+    }
+    fprintf(g, "\n");
+
+    for (int i = 0; i < count; i++) {
+        int found = 0;
+        for (int j = 0; j < unique_brands; j++) {
+            if (strcmp(cars[i].brand, brands[j]) == 0) {
+                brand_count[j]++;
+                found = 1;
+                break;
+            }
+        }
+        if (!found) {
+            strcpy(brands[unique_brands], cars[i].brand);
+            brand_count[unique_brands] = 1;
+            unique_brands++;
+        }
+    }
+
+    fprintf(g, "б) Количество автомобилей каждой марки:\n");
+    for (int i = 0; i < unique_brands; i++) {
+        fprintf(g, "%s: %d\n", brands[i], brand_count[i]);
+    }
+
+    fclose(g);
+
+    printf("Результаты записаны\n");
+    return 0;
+}
